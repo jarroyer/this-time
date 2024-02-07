@@ -4,7 +4,7 @@ import java.util.List;
 
 public interface TradingStrategy {
 
-    List<String> getTickers();
+    String getTicker();
 
     String getName();
 

@@ -1,11 +1,3 @@
 package fun.debaucherydungeon;
 
-public record Action {
-
-    private String actionToTake;
-    private String ticker;
-    private float price;
-
-
-
-}
+public record Action (String actionToTake, String ticker, float price){ }
