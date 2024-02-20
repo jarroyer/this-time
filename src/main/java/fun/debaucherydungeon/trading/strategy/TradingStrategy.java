@@ -1,6 +1,7 @@
 package fun.debaucherydungeon.trading.strategy;
 
 import fun.debaucherydungeon.asset.TradingData;
+import fun.debaucherydungeon.exchange.ExchangeResponse;
 import fun.debaucherydungeon.trading.Action;
 
 public interface TradingStrategy {
@@ -11,5 +12,5 @@ public interface TradingStrategy {
 
     Action onData(TradingData data);
 
-
+    void onExchangeEvent(ExchangeResponse event);
 }

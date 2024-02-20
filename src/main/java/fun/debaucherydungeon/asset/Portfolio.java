@@ -3,11 +3,11 @@ package fun.debaucherydungeon.asset;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Holdings {
+public class Portfolio {
 
     private List<Holding> holdings;
 
-    public Holdings() {
+    public Portfolio() {
         this.holdings = new ArrayList<>();
     }
 
@@ -50,5 +50,15 @@ public class Holdings {
                 }
             }
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Portfolio[ ");
+        for (Holding h : holdings) {
+            sb.append(h).append(", ");
+        }
+        sb.append("]");
+        return sb.toString();
     }
 }
