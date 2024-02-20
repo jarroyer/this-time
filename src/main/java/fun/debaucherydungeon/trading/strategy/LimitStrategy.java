@@ -1,6 +1,9 @@
-package fun.debaucherydungeon;
+package fun.debaucherydungeon.trading.strategy;
 
-import java.util.List;
+import fun.debaucherydungeon.asset.TradingData;
+import fun.debaucherydungeon.trading.Action;
+
+import static fun.debaucherydungeon.trading.ActionKey.*;
 
 public class LimitStrategy implements TradingStrategy {
 
@@ -27,12 +30,12 @@ public class LimitStrategy implements TradingStrategy {
     }
 
     @Override
-    public Action onData(Data data) {
+    public Action onData(TradingData data) {
         if (data.price() > sellAbove) {
-            return new Action("SELL", data.ticker(), data.price());
+            return new Action(SELL, data.ticker(), data.price());
         } else if (data.price() < buyBelow) {
-            return new Action("BUY", data.ticker(), data.price());
+            return new Action(BUY, data.ticker(), data.price());
         }
-        return new Action("HOLD", data.ticker(), data.price());
+        return new Action(HOLD, data.ticker(), data.price());
     }
 }
