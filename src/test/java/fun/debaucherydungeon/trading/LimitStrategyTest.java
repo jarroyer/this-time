@@ -3,6 +3,8 @@ package fun.debaucherydungeon.trading;
 import fun.debaucherydungeon.asset.Holding;
 import fun.debaucherydungeon.asset.Portfolio;
 import fun.debaucherydungeon.asset.TradingData;
+import fun.debaucherydungeon.exchange.ExchangeRequest;
+import fun.debaucherydungeon.exchange.ExchangeResponse;
 import fun.debaucherydungeon.trading.strategy.LimitStrategy;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -43,4 +45,51 @@ public class LimitStrategyTest {
         Assertions.assertEquals(action.quantity(), 10);
     }
 
+    @Test
+    void testHoldingOnActiveBuy() {
+        Portfolio p = new Portfolio();
+        LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
+        strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, System.currentTimeMillis()));
+        Assertions.assertTrue(strategy.isHolding());
+    }
+
+    @Test
+    void testHoldingOnActiveSell() {
+        Portfolio p = new Portfolio();
+        LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
+        strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+        Assertions.assertTrue(strategy.isHolding());
+    }
+
+    @Test
+    void testPortfolioGetsUpdatedWithSuccessfulExchangeBuy() {
+        Portfolio p = new Portfolio();
+        LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, System.currentTimeMillis()));
+        ExchangeRequest request = new ExchangeRequest(action);
+        ExchangeResponse response = new ExchangeResponse("SUCCESS", request);
+        strategy.onExchangeEvent(response);
+        Assertions.assertTrue(p.contains("NVDA"));
+    }
+
+
+    @Test
+    void testHoldGetsUpdatedOnExchangeBuy() {
+        Portfolio p = new Portfolio();
+        LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, System.currentTimeMillis()));
+        ExchangeRequest request = new ExchangeRequest(action);
+        ExchangeResponse response = new ExchangeResponse("SUCCESS", request);
+        strategy.onExchangeEvent(response);
+        Assertions.assertFalse(strategy.isHolding());
+    }
+
+    @Test
+    void testPortfolioLosesStockOnSell() {
+        Portfolio p = new Portfolio();
+        p.buy(new Holding("NVDA", 10));
+        LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+
+    }
 }

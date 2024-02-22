@@ -16,6 +16,8 @@ public class LimitStrategy implements TradingStrategy {
     private final float quantity;
     private final Portfolio portfolio;
 
+    private boolean hold = false;
+
     public LimitStrategy(float buyBelow,
                          float sellAbove,
                          float quantity,
@@ -40,9 +42,14 @@ public class LimitStrategy implements TradingStrategy {
 
     @Override
     public Action onData(TradingData data) {
+        if (hold) {
+            return new Action(HOLD, data.ticker(), quantity, data.price());
+        }
         if (data.price() > sellAbove) {
+            hold = true;
             return new Action(SELL, data.ticker(), quantity, data.price());
         } else if (data.price() < buyBelow) {
+            hold = true;
             return new Action(BUY, data.ticker(), quantity, data.price());
         }
         return new Action(HOLD, data.ticker(), quantity, data.price());
@@ -51,7 +58,14 @@ public class LimitStrategy implements TradingStrategy {
     @Override
     public void onExchangeEvent(ExchangeResponse event) {
         if (event.status().equals("SUCCESS")) {
-            portfolio.add(new Holding(event.request().ticker(), event.request().quantity()));
+            if (event.request().action() == BUY) {
+                portfolio.buy(new Holding(event.request().ticker(), event.request().quantity()));
+            }
         }
+        hold = false;
+    }
+
+    public boolean isHolding() {
+        return hold;
     }
 }

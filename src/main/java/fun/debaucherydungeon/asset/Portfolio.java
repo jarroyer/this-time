@@ -1,18 +1,19 @@
 package fun.debaucherydungeon.asset;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class Portfolio {
 
-    private List<Holding> holdings;
+    private final Map<String, Holding> holdings;
 
     public Portfolio() {
-        this.holdings = new ArrayList<>();
+        this.holdings = new HashMap<>();
     }
 
     public boolean contains(String ticker) {
-        for (Holding h : holdings) {
+        // TODO this is bad
+        for (Holding h : holdings.values()) {
             if (h.ticker().equals(ticker)) {
                 return true;
             }
@@ -20,42 +21,40 @@ public class Portfolio {
         return false;
     }
 
-    public Holding get(String ticker) {
-        for (Holding h : holdings) {
-            if (h.ticker().equals(ticker)) {
-                return h;
-            }
-        }
-        throw new RuntimeException("Could not find ticker " + ticker + " in holdings");
-    }
-
-    public void put(Holding toAdd) {
-        if (!this.contains(toAdd.ticker())) {
-            holdings.add(toAdd);
+    public void buy(Holding purchased) {
+        if (!this.contains(purchased.ticker())) {
+            holdings.put(purchased.ticker(), purchased);
         } else {
-            throw new RuntimeException("Trying to add holding " + toAdd + " to holdings but it was already present. " +
-                    "Please use the add(Holding toAdd) method");
+            Holding h = holdings.get(purchased.ticker());
+            h.setQuantity(purchased.quantity() + h.quantity());
         }
     }
 
-    public void add(Holding toAdd) {
-        if (!this.contains(toAdd.ticker())) {
-            holdings.add(toAdd);
+    public void sell(Holding sold) {
+        if (!this.contains(sold.ticker())) {
+            throw new RuntimeException("Trying to sell asset " + sold.ticker() + " that isn't held in the portfolio");
         } else {
-            for (Holding h : holdings) {
-                if (h.ticker().equals(toAdd.ticker())) {
-                    holdings.remove(h);
-                    Holding newEntry = new Holding(h.ticker(), h.quantity() + toAdd.quantity());
-                    holdings.add(newEntry);
-                }
+            Holding held = holdings.get(sold.ticker());
+            if (held.quantity() < sold.quantity()) {
+                throw new RuntimeException("Portfolio is holding " + held.quantity() + " of asset " + held.ticker() + ", cannot sell "+ sold.quantity());
+            } else {
+                held.setQuantity(held.quantity() - sold.quantity());
             }
+        }
+    }
+
+    public float getQuantity(String ticker) {
+        if (this.contains(ticker)) {
+            return this.holdings.get(ticker).quantity();
+        } else {
+            return 0;
         }
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder("Portfolio[ ");
-        for (Holding h : holdings) {
+        for (Holding h : holdings.values()) {
             sb.append(h).append(", ");
         }
         sb.append("]");
