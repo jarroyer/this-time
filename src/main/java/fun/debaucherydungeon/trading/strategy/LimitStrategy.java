@@ -60,6 +60,8 @@ public class LimitStrategy implements TradingStrategy {
         if (event.status().equals("SUCCESS")) {
             if (event.request().action() == BUY) {
                 portfolio.buy(new Holding(event.request().ticker(), event.request().quantity()));
+            } else if (event.request().action() == SELL) {
+                portfolio.sell(new Holding(event.request().ticker(), event.request().quantity()));
             }
         }
         hold = false;

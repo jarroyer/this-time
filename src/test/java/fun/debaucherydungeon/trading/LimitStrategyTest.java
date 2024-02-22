@@ -90,6 +90,20 @@ public class LimitStrategyTest {
         p.buy(new Holding("NVDA", 10));
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
         Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+        ExchangeRequest request = new ExchangeRequest(action);
+        ExchangeResponse response = new ExchangeResponse("SUCCESS", request);
+        strategy.onExchangeEvent(response);
+        Assertions.assertEquals(0, p.getQuantity("NVDA"), 0.1f);
+    }
+
+    @Test
+    void testDataDoesNothingWhenStrategyIsOnHold() {
+        Portfolio p = new Portfolio();
+        LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
+        p.buy(new Holding("NVDA", 10));
+        strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+        Assertions.assertEquals(HOLD, action.actionToTake());
 
     }
 }
