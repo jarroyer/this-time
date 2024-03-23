@@ -1,6 +1,8 @@
 package fun.debaucherydungeon.data.polygon.url;
 
-public class EmptyPolygonUrl implements PolygonUrl {
+import fun.debaucherydungeon.data.Url;
+
+public class EmptyPolygonUrl implements Url {
 
 
     @Override

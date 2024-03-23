@@ -1,8 +1,8 @@
 package fun.debaucherydungeon.data.polygon.url;
 
-import fun.debaucherydungeon.data.polygon.url.PolygonUrl;
+import fun.debaucherydungeon.data.Url;
 
-public class PolygonAggregatesUrl implements PolygonUrl {
+public class PolygonAggregatesUrl implements Url {
 
     private final String baseUrl = "https://api.polygon.io/v2/aggs";
     private final String apiToken = "Vq6DZx1B3e_fv1gCQMAxmEWdkLP5s84i";
@@ -32,11 +32,11 @@ public class PolygonAggregatesUrl implements PolygonUrl {
         this.limit = limit;
     }
 
-    public void setTo(int millis) {
+    public void setTo(long millis) {
         this.to = millis;
     }
 
-    public void setFrom(int millis) {
+    public void setFrom(long millis) {
         this.from = millis;
     }
 

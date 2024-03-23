@@ -2,5 +2,5 @@ package fun.debaucherydungeon.data;
 
 public interface DataSource {
 
-    void poll();
+    void poll(Url url);
 }
