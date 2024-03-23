@@ -1,4 +1,4 @@
-package fun.debaucherydungeon.data.polygon;
+package fun.debaucherydungeon.data.polygon.url;
 
 public interface PolygonUrl {
 

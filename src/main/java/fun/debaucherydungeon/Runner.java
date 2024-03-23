@@ -19,7 +19,7 @@ public class Runner {
         Portfolio portfolio = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", portfolio);
         Exchange exchange = new MockExchange();
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 199.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 199.0f, 10, System.currentTimeMillis()));
         ExchangeResponse response = exchange.send(new ExchangeRequest(action.actionToTake(), action.ticker(), action.price(), action.quantity()));
         strategy.onExchangeEvent(response);
         logger.info(portfolio);

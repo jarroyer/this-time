@@ -1,25 +1,27 @@
-package fun.debaucherydungeon.data.polygon;
+package fun.debaucherydungeon.data.polygon.url;
+
+import fun.debaucherydungeon.data.polygon.url.PolygonUrl;
 
 public class PolygonAggregatesUrl implements PolygonUrl {
 
     private final String baseUrl = "https://api.polygon.io/v2/aggs";
     private final String apiToken = "Vq6DZx1B3e_fv1gCQMAxmEWdkLP5s84i";
 
-    private final String ticker;
-    private final int timespanMultiplier;
-    private final String timespan;
-    private final boolean adjusted;
-    private final String from;
-    private final String to;
-    private final int limit;
+    private String ticker;
+    private int timespanMultiplier;
+    private String timespan;
+    private boolean adjusted;
+    private long from;
+    private long to;
+    private int limit;
 
     public PolygonAggregatesUrl(
             String ticker,
             int timespanMultiplier,
             String timespan,
             boolean adjusted,
-            String from,
-            String to,
+            long from,
+            long to,
             int limit) {
         this.ticker = ticker;
         this.timespanMultiplier = timespanMultiplier;
@@ -28,6 +30,14 @@ public class PolygonAggregatesUrl implements PolygonUrl {
         this.from = from;
         this.to = to;
         this.limit = limit;
+    }
+
+    public void setTo(int millis) {
+        this.to = millis;
+    }
+
+    public void setFrom(int millis) {
+        this.from = millis;
     }
 
     @Override

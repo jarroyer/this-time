@@ -17,7 +17,7 @@ public class LimitStrategyTest {
     void testSell() {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, 10, System.currentTimeMillis()));
         Assertions.assertEquals(action.actionToTake(), SELL);
     }
 
@@ -25,7 +25,7 @@ public class LimitStrategyTest {
     void testBuy() {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, 10, System.currentTimeMillis()));
         Assertions.assertEquals(action.actionToTake(), BUY);
     }
 
@@ -33,7 +33,7 @@ public class LimitStrategyTest {
     void testHold() {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 220.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 220.0f, 10, System.currentTimeMillis()));
         Assertions.assertEquals(action.actionToTake(), HOLD);
     }
 
@@ -41,7 +41,7 @@ public class LimitStrategyTest {
     void testQuantity() {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 220.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 220.0f, 10, System.currentTimeMillis()));
         Assertions.assertEquals(action.quantity(), 10);
     }
 
@@ -49,7 +49,7 @@ public class LimitStrategyTest {
     void testHoldingOnActiveBuy() {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, System.currentTimeMillis()));
+        strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, 10, System.currentTimeMillis()));
         Assertions.assertTrue(strategy.isHolding());
     }
 
@@ -57,7 +57,7 @@ public class LimitStrategyTest {
     void testHoldingOnActiveSell() {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+        strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, 10, System.currentTimeMillis()));
         Assertions.assertTrue(strategy.isHolding());
     }
 
@@ -65,7 +65,7 @@ public class LimitStrategyTest {
     void testPortfolioGetsUpdatedWithSuccessfulExchangeBuy() {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, 10, System.currentTimeMillis()));
         ExchangeRequest request = new ExchangeRequest(action);
         ExchangeResponse response = new ExchangeResponse("SUCCESS", request);
         strategy.onExchangeEvent(response);
@@ -77,7 +77,7 @@ public class LimitStrategyTest {
     void testHoldGetsUpdatedOnExchangeBuy() {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 190.0f, 10, System.currentTimeMillis()));
         ExchangeRequest request = new ExchangeRequest(action);
         ExchangeResponse response = new ExchangeResponse("SUCCESS", request);
         strategy.onExchangeEvent(response);
@@ -89,7 +89,7 @@ public class LimitStrategyTest {
         Portfolio p = new Portfolio();
         p.buy(new Holding("NVDA", 10));
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, 10, System.currentTimeMillis()));
         ExchangeRequest request = new ExchangeRequest(action);
         ExchangeResponse response = new ExchangeResponse("SUCCESS", request);
         strategy.onExchangeEvent(response);
@@ -101,8 +101,8 @@ public class LimitStrategyTest {
         Portfolio p = new Portfolio();
         LimitStrategy strategy = new LimitStrategy(200.0f, 250.0f, 10, "NVDA", p);
         p.buy(new Holding("NVDA", 10));
-        strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
-        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, System.currentTimeMillis()));
+        strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, 10, System.currentTimeMillis()));
+        Action action = strategy.onData(new TradingData("OCHL", "NVDA", 260.0f, 10, System.currentTimeMillis()));
         Assertions.assertEquals(HOLD, action.actionToTake());
 
     }
